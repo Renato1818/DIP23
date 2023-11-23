@@ -12,7 +12,6 @@ test_figure_path = "C:/Users/asus/GitHub_clones/DIP23/src/main/python/project_na
 
 sift.compare_images_sift(image1_path, image2_path)
 
-
 #sift.compare_sum_of_images_with_external_figure(image1_path, image2_path, test_figure_path)
 
 #surf.compare_images_surf(image1_path, image2_path)
