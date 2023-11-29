@@ -8,6 +8,7 @@ from SVM import compare as cp
 from SVM import sift
 import tkinter as tk
 from tkinter.filedialog import askdirectory
+import sys
 
 # Example usage
 image1_path = "C:/Users/asus/GitHub_clones/DIP23/src/main/python/project_name/iris-1.jpg"
@@ -25,6 +26,9 @@ test_figure_path = "C:/Users/asus/GitHub_clones/DIP23/src/main/python/project_na
 
 # TEST# Set the paths for the database and the new image
 database_path = askdirectory()
+if not database_path:
+    print("No directory selected. Exiting program.")
+    sys.exit()
 print(database_path)
 #new_image_path = "path/to/new_image.jpg"
 new_image_path = test_figure_path
@@ -41,22 +45,30 @@ database_image_paths = database.read_image_paths()
 results = image_comparer.compare_with_database(new_image_path, database_image_paths)
 
 # Print the results
-#for database_image_path, similarity_score in results:
-#    print(f"Image: {database_image_path}, Similarity Score: {similarity_score}")
+aux=0
+for database_image_path, similarity_score in results:
+    print(f"Image: {aux}, Similarity Score: {similarity_score} \n")
+    aux=aux+1
     
 # Display the most similar image
-most_similar_path, similarity_score = results[0]
+i=0
+most_similar_path, most_similarity_score = results[i]
+for database_image_path, similarity_score in results:
+    if similarity_score > most_similarity_score:
+        most_similar_path, most_similarity_score = results[i]
+        print(i)
+    i=i+1
+        
 most_similar_img = cv2.imread(most_similar_path, cv2.IMREAD_COLOR)
 
-# Plot the images
+# Plot the images 
 fig, axs = plt.subplots(1, 2, figsize=(10, 5))
-
 axs[0].imshow(cv2.cvtColor(cv2.imread(new_image_path, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB))
 axs[0].set_title("New Image")
 axs[0].axis("off")
-
 axs[1].imshow(cv2.cvtColor(most_similar_img, cv2.COLOR_BGR2RGB))
-axs[1].set_title(f"Most Similar Image\nScore: {similarity_score}")
+axs[1].set_title(f"Most Similar Image\nScore: {most_similarity_score}")
 axs[1].axis("off")
-
 plt.show()
+
+sift.compare_images_sift(new_image_path, most_similar_path)
