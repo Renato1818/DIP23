@@ -1,6 +1,31 @@
 import cv2
 import numpy as np
 
+class Sift:
+    def __init__(self):
+        self.sift = cv2.SIFT_create()
+        self.bf = cv2.BFMatcher()
+
+    def compare_images(self, img1, img2):
+        """
+        Compares two images using the SIFT algorithm.
+        Returns a similarity score based on the number of good matches.
+        """
+        # Compute SIFT descriptors
+        kp1, des1 = self.sift.detectAndCompute(img1, None)
+        kp2, des2 = self.sift.detectAndCompute(img2, None)
+
+        # BFMatcher with default params
+        matches = self.bf.knnMatch(des1, des2, k=2)
+
+        # Apply ratio test
+        good_matches = [m for m, n in matches if m.distance < 0.75 * n.distance]
+
+        # Compute a similarity score (for example, the number of good matches)
+        similarity_score = len(good_matches)
+
+        return similarity_score
+    
 def compare_images_sift(image1, image2):
     # Load images
     img1 = cv2.imread(image1, cv2.IMREAD_GRAYSCALE)

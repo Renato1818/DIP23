@@ -1,7 +1,13 @@
-import cv2
 import numpy as np
+import cv2
+import matplotlib.pyplot as plt
 import SVM.sift as sift
 import SVM.sufr as surf
+import DataBase.database as db
+from SVM import compare as cp
+from SVM import sift
+import tkinter as tk
+from tkinter.filedialog import askdirectory
 
 # Example usage
 image1_path = "C:/Users/asus/GitHub_clones/DIP23/src/main/python/project_name/iris-1.jpg"
@@ -10,8 +16,47 @@ image2_path = "C:/Users/asus/GitHub_clones/DIP23/src/main/python/project_name/ir
 # Example usage
 test_figure_path = "C:/Users/asus/GitHub_clones/DIP23/src/main/python/project_name/iris-3.jpg"
 
-sift.compare_images_sift(image1_path, image2_path)
+#sift.compare_images_sift(image1_path, image2_path)
 
 #sift.compare_sum_of_images_with_external_figure(image1_path, image2_path, test_figure_path)
 
 #surf.compare_images_surf(image1_path, image2_path)
+
+
+# TEST# Set the paths for the database and the new image
+database_path = askdirectory()
+print(database_path)
+#new_image_path = "path/to/new_image.jpg"
+new_image_path = test_figure_path
+
+# Initialize classes
+database = db.Database(database_path)
+sift_comparer = sift.Sift()
+image_comparer = cp.Compare(sift_comparer)
+
+# Read image paths from the database
+database_image_paths = database.read_image_paths()
+
+# Compare the new image with images from the database
+results = image_comparer.compare_with_database(new_image_path, database_image_paths)
+
+# Print the results
+#for database_image_path, similarity_score in results:
+#    print(f"Image: {database_image_path}, Similarity Score: {similarity_score}")
+    
+# Display the most similar image
+most_similar_path, similarity_score = results[0]
+most_similar_img = cv2.imread(most_similar_path, cv2.IMREAD_COLOR)
+
+# Plot the images
+fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+
+axs[0].imshow(cv2.cvtColor(cv2.imread(new_image_path, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB))
+axs[0].set_title("New Image")
+axs[0].axis("off")
+
+axs[1].imshow(cv2.cvtColor(most_similar_img, cv2.COLOR_BGR2RGB))
+axs[1].set_title(f"Most Similar Image\nScore: {similarity_score}")
+axs[1].axis("off")
+
+plt.show()
