@@ -15,6 +15,10 @@ class Sift:
         kp1, des1 = self.sift.detectAndCompute(img1, None)
         kp2, des2 = self.sift.detectAndCompute(img2, None)
 
+        # Ensure descriptors have the same data type
+        des1 = np.float32(des1)
+        des2 = np.float32(des2)
+        
         # BFMatcher with default params
         matches = self.bf.knnMatch(des1, des2, k=2)
 

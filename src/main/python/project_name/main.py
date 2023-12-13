@@ -39,27 +39,33 @@ sift_comparer = sift.Sift()
 image_comparer = cp.Compare(sift_comparer)
 
 # Read image paths from the database
-database_image_paths = database.read_image_paths()
+database_image_paths = database.read_images_from_subfolders()
+if not database_image_paths: 
+    print("No images found. Exiting program.")
+    sys.exit()
 
 # Compare the new image with images from the database
 results = image_comparer.compare_with_database(new_image_path, database_image_paths)
 
 # Print the results
-aux=0
+"""aux=0
 for database_image_path, similarity_score in results:
     print(f"Image: {aux}, Similarity Score: {similarity_score} \n")
-    aux=aux+1
+    aux=aux+1"""
     
 # Display the most similar image
 i=0
-most_similar_path, most_similarity_score = results[i]
-for database_image_path, similarity_score in results:
+most_similar_path, most_similar_folder, most_similarity_score = results[i]
+for database_image_path, folder_name, similarity_score in results:
     if similarity_score > most_similarity_score:
-        most_similar_path, most_similarity_score = results[i]
-        print(i)
+        most_similar_path, most_similar_folder, most_similarity_score = results[i]
+        #print(i)
     i=i+1
         
 most_similar_img = cv2.imread(most_similar_path, cv2.IMREAD_COLOR)
+
+print(f"Number of analise images: {len(results)}" )
+print(f"Most similar folder: {most_similar_folder}" )
 
 # Plot the images 
 fig, axs = plt.subplots(1, 2, figsize=(10, 5))
