@@ -27,4 +27,8 @@ class Compare:
             # Append the result to the list
             similarity_scores.append((database_image_path, folder_name, similarity_score))
 
+        """
+        total_sum = 0
+        total_points = len(selected_image), total_sum, folder_name
+        """
         return similarity_scores

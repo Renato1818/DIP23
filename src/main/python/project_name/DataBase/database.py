@@ -6,7 +6,7 @@ import random
 class Database:
     def __init__(self, database_path):
         self.database_path = database_path
-        self.k = 150
+        self.k = 200
 
     def read_image_paths(self, folder_path):
         """
@@ -37,7 +37,7 @@ class Database:
         for selected_image in selected_images:
             file_path = os.path.join(folder_path, selected_image)
             image_paths.append((file_path, folder_name))
-
+        
         return image_paths
 
     def read_images_from_subfolders(self):
@@ -57,10 +57,10 @@ class Database:
         for subfolder in subfolders:
             image_paths.extend(self.read_image_paths(subfolder))
             
-            #Controll
+            """#Controll
             print(subfolder)
             aux = aux +1
             if (aux > 20):
-                return image_paths
+                return image_paths"""
 
         return image_paths
