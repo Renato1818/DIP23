@@ -16,6 +16,7 @@ image2_path = "C:/Users/asus/GitHub_clones/DIP23/src/main/python/project_name/ir
 
 # Example usage
 test_figure_path = "C:/Users/asus/GitHub_clones/DIP23/src/main/python/project_name/iris-3.jpg"
+test_figure_path2 = "C:/Users/asus/GitHub_clones/DIP23/src/main/python/project_name/download.jpg"
 
 #sift.compare_images_sift(image1_path, image2_path)
 
@@ -31,7 +32,7 @@ if not database_path:
     sys.exit()
 print(database_path)
 #new_image_path = "path/to/new_image.jpg"
-new_image_path = test_figure_path
+new_image_path = test_figure_path2
 
 # Initialize classes
 database = db.Database(database_path)
@@ -59,7 +60,7 @@ most_similar_path, most_similar_folder, most_similarity_score = results[i]
 for database_image_path, folder_name, similarity_score in results:
     if similarity_score > most_similarity_score:
         most_similar_path, most_similar_folder, most_similarity_score = results[i]
-        #print(i)
+        print(most_similarity_score)
     i=i+1
         
 most_similar_img = cv2.imread(most_similar_path, cv2.IMREAD_COLOR)
@@ -70,10 +71,10 @@ print(f"Most similar folder: {most_similar_folder}" )
 # Plot the images 
 fig, axs = plt.subplots(1, 2, figsize=(10, 5))
 axs[0].imshow(cv2.cvtColor(cv2.imread(new_image_path, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB))
-axs[0].set_title("New Image")
+axs[0].set_title("Image to classify")
 axs[0].axis("off")
 axs[1].imshow(cv2.cvtColor(most_similar_img, cv2.COLOR_BGR2RGB))
-axs[1].set_title(f"Most Similar Image\nScore: {most_similarity_score}")
+axs[1].set_title(f"Most Similar Image\nType: {most_similar_folder}\nScore: {most_similarity_score}")
 axs[1].axis("off")
 plt.show()
 
