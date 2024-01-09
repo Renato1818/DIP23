@@ -32,3 +32,24 @@ class Compare:
         total_points = len(selected_image), total_sum, folder_name
         """
         return similarity_scores
+    
+    def find_scope(types, results):        
+        types_with_scores = [(t, 0, 0) for t in types]
+
+        for database_image_path, folder_name, similarity_score in results:
+            for i, (type_name, n_images, score) in enumerate(types_with_scores):
+                if type_name == folder_name:
+                    types_with_scores[i] = (type_name, n_images + 1, score + similarity_score)
+        return types_with_scores
+     
+    def best_scope(types_with_scores):        
+        k=0
+        for type_name, n_images, score in types_with_scores:
+            if k == 0:
+                best_scope_name = type_name
+                best_scope_type = score/n_images
+                k=k+1
+            if score/n_images > best_scope_type:
+                best_scope_type = score/n_images
+                best_scope_name = type_name
+        return best_scope_name

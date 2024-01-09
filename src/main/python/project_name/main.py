@@ -40,7 +40,7 @@ sift_comparer = sift.Sift()
 image_comparer = cp.Compare(sift_comparer)
 
 # Read image paths from the database
-database_image_paths = database.read_images_from_subfolders()
+types, database_image_paths = database.read_images_from_subfolders()
 if not database_image_paths: 
     print("No images found. Exiting program.")
     sys.exit()
@@ -53,7 +53,16 @@ results = image_comparer.compare_with_database(new_image_path, database_image_pa
 for database_image_path, similarity_score in results:
     print(f"Image: {aux}, Similarity Score: {similarity_score} \n")
     aux=aux+1"""
-    
+
+# Scope for each type of flowers
+types_with_scores = image_comparer.find_scope(types, results)        
+print(types_with_scores)
+
+# The best type
+most_similar_type = image_comparer.best_scope(types_with_scores)
+print(most_similar_type)
+
+
 # Display the most similar image
 i=0
 most_similar_path, most_similar_folder, most_similarity_score = results[i]
