@@ -6,10 +6,10 @@ import random
 class Database:
     def __init__(self, database_path):
         self.database_path = database_path
-        self.k = 100
+        self.k = 10
 
     
-    def read_image_paths_random(self, folder_path):
+    def read_image_paths(self, folder_path):
         """
         Reads image paths from the database folder.
         Returns a list of image paths. (image path, folder name).
@@ -55,7 +55,7 @@ class Database:
         
         return image_paths
 
-    def read_images_from_subfolders(self):
+    def read_images(self):
         """
         Reads image paths from each subfolder within the specified database folder.
         Returns a list of tuples containing (image path, folder name).
@@ -66,9 +66,16 @@ class Database:
             print(f"Database path '{self.database_path}' does not exist.")
             return image_paths
 
+        #Search in subfolders
         subfolders = [f.path for f in os.scandir(self.database_path) if f.is_dir()]
+        
+        if subfolders is None:
+            folder_name = os.path.basename(self.database_path)
+            image_paths.extend(self.read_image_paths_random(self.database_path, folder_name))
+            return types,image_paths
+         
         types = []
-        aux=0
+        #aux=0
         for subfolder in subfolders:
             folder_name = os.path.basename(subfolder)
             image_paths.extend(self.read_image_paths_random(subfolder, folder_name))
@@ -80,4 +87,4 @@ class Database:
             if (aux > 20):
                 return image_paths"""
 
-        return types,image_paths
+        return types, image_paths

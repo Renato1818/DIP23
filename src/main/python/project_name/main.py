@@ -19,9 +19,7 @@ test_figure_path = "C:/Users/asus/GitHub_clones/DIP23/src/main/python/project_na
 test_figure_path2 = "C:/Users/asus/GitHub_clones/DIP23/src/main/python/project_name/download.jpg"
 
 #sift.compare_images_sift(image1_path, image2_path)
-
 #sift.compare_sum_of_images_with_external_figure(image1_path, image2_path, test_figure_path)
-
 #surf.compare_images_surf(image1_path, image2_path)
 
 
@@ -40,7 +38,7 @@ sift_comparer = sift.Sift()
 image_comparer = cp.Compare(sift_comparer)
 
 # Read image paths from the database
-types, database_image_paths = database.read_images_from_subfolders()
+types, database_image_paths = database.read_images()
 if not database_image_paths: 
     print("No images found. Exiting program.")
     sys.exit()

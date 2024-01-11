@@ -33,7 +33,7 @@ class Compare:
         """
         return similarity_scores
     
-    def find_scope(types, results):        
+    def find_scope(self, types, results):        
         types_with_scores = [(t, 0, 0) for t in types]
 
         for database_image_path, folder_name, similarity_score in results:
@@ -42,7 +42,7 @@ class Compare:
                     types_with_scores[i] = (type_name, n_images + 1, score + similarity_score)
         return types_with_scores
      
-    def best_scope(types_with_scores):        
+    def best_scope(self, types_with_scores):        
         k=0
         for type_name, n_images, score in types_with_scores:
             if k == 0:
