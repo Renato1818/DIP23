@@ -28,8 +28,7 @@ database_path = askdirectory()
 if not database_path:
     print("No directory selected. Exiting program.")
     sys.exit()
-print(database_path)
-#new_image_path = "path/to/new_image.jpg"
+
 new_image_path = test_figure_path2
 
 # Initialize classes
@@ -58,7 +57,7 @@ most_similar_path, most_similar_folder, most_similarity_score = results[i]
 for database_image_path, folder_name, similarity_score in results:
     if similarity_score > most_similarity_score:
         most_similar_path, most_similar_folder, most_similarity_score = results[i]
-        print(most_similarity_score)
+        #print(most_similarity_score)
     i=i+1
         
 most_similar_img = cv2.imread(most_similar_path, cv2.IMREAD_COLOR)
