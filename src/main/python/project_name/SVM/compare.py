@@ -1,6 +1,7 @@
 import cv2
 import sqlite3
 import numpy as np
+from tqdm import tqdm
 
 class Compare:
     def __init__(self, sift_comparer):
@@ -16,10 +17,10 @@ class Compare:
         # Load the new image
         new_img = cv2.imread(new_image_path, cv2.IMREAD_GRAYSCALE)
 
-        for database_image_path, folder_name in database_image_paths:
+        for database_image_path, folder_name in tqdm(database_image_paths, desc="Comparing images", unit="image"):
             # Load the database image
             database_img = cv2.imread(database_image_path, cv2.IMREAD_GRAYSCALE)
-            print(f"Image: {database_image_path}; Is path: {folder_name}")
+            #print(f"Image: {database_image_path}; Is path: {folder_name}")
 
             # Perform the comparison using the SIFT comparer
             similarity_score = self.sift_comparer.compare_images(new_img, database_img)

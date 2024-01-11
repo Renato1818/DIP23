@@ -9,6 +9,7 @@ from SVM import sift
 import tkinter as tk
 from tkinter.filedialog import askdirectory
 import sys
+from tqdm import tqdm
 
 # Example usage
 image1_path = "C:/Users/asus/GitHub_clones/DIP23/src/main/python/project_name/iris-1.jpg"
@@ -23,12 +24,12 @@ test_figure_path2 = "C:/Users/asus/GitHub_clones/DIP23/src/main/python/project_n
 #surf.compare_images_surf(image1_path, image2_path)
 
 
-# TEST# Set the paths for the database and the new image
+# Set the paths for the database
 database_path = askdirectory()
 if not database_path:
     print("No directory selected. Exiting program.")
     sys.exit()
-print(database_path)
+
 #new_image_path = "path/to/new_image.jpg"
 new_image_path = test_figure_path2
 
