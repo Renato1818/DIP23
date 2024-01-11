@@ -23,9 +23,11 @@ class Compare:
         if not database_image_paths: 
             return -1
 
-        # Compare the new image with images from the database
+        # Compare the test image with images from the database
         results = self.compare_with_database(new_image_path, database_image_paths)
 
+        ## Statistics ##
+        
         # Scope for each type of flowers
         types_with_scores = self.find_scope(types, results)        
         print(types_with_scores)
@@ -33,7 +35,6 @@ class Compare:
         # The best type
         most_similar_type = self.best_scope(types_with_scores)
         print(most_similar_type)
-
 
         # Display the most similar image
         i=0
@@ -62,10 +63,6 @@ class Compare:
         sift.compare_images_sift(new_image_path, most_similar_path)
     
     def compare_with_database(self, new_image_path, database_image_paths):
-        """
-        Compares the new image with each image in the database.
-        Returns a list of similarity scores.
-        """
         similarity_scores = []
 
         # Load the new image
