@@ -6,7 +6,7 @@ import random
 class Database:
     def __init__(self, database_path):
         self.database_path = database_path
-        self.k = 10 #to define
+        self.k = 5 #to define
 
     #read all images inside a path
     def read_image_paths(self, folder_path):
@@ -31,6 +31,7 @@ class Database:
     #read k random images inside a path
     def read_image_paths_random(self, folder_path, folder_name):      
         image_paths = []
+        types = []
         
         if not os.path.exists(self.database_path):
             print(f"Database path '{self.database_path}' does not exist.")
@@ -45,7 +46,8 @@ class Database:
             file_path = os.path.join(folder_path, selected_image)
             image_paths.append((file_path, folder_name))
         
-        return image_paths
+        types.append(folder_name)
+        return types, image_paths
 
     #read k random images inside a path and subfolders
     def read_images(self):
@@ -56,44 +58,20 @@ class Database:
             print(f"Database path '{self.database_path}' does not exist.")
             return types, image_paths
 
-        #Search in subfolders
+        '''#Search in subfolders
         subfolders = [f.path for f in os.scandir(self.database_path) if f.is_dir()]
         
         if subfolders is None:
             folder_name = os.path.basename(self.database_path)
             image_paths.extend(self.read_image_paths_random(self.database_path, folder_name))
-            return folder_name,image_paths
-         
-        #aux=0
-        #for subfolder in subfolders:
-        types, image_paths = self.aux_read_images(self.database_path)    
-        #print("Here1")
-            #folder_name = os.path.basename(subfolder)
-            #image_paths.extend(self.read_image_paths_random(subfolder, folder_name))
-            #types.append(folder_name)
+            print("Here2")
+            return [folder_name], image_paths'''
+        
+        for folder_path, _, _ in os.walk(self.database_path):
+            folder_name = os.path.basename(folder_path)
+            aux_types, aux_image_paths = self.read_image_paths_random(folder_path, folder_name)
+            types.extend(aux_types)
+            image_paths.extend(aux_image_paths)
 
         return types, image_paths
     
-    def aux_read_images(self, folder):
-        image_paths = []
-        types = []
-        #print("Here2")
-
-        #Search in subfolders
-        subfolders = [f.path for f in os.scandir(folder) if f.is_dir()]
-        #print(subfolders)
-        
-        if not subfolders:
-            folder_name = os.path.basename(folder)
-            image_paths.extend(self.read_image_paths_random(folder, folder_name))
-            return folder_name,image_paths
-        
-        for subfolder in subfolders:
-            aux_types, aux_image_paths = self.aux_read_images(subfolder)
-            #print(aux_types)
-            #folder_name = os.path.basename(subfolder)
-            #image_paths.extend(self.read_image_paths_random(subfolder, folder_name))
-            image_paths.extend(aux_image_paths)
-            types.append(aux_types)
-        
-        return types, image_paths
