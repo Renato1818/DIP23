@@ -19,7 +19,7 @@ class Compare:
         for database_image_path, folder_name in database_image_paths:
             # Load the database image
             database_img = cv2.imread(database_image_path, cv2.IMREAD_GRAYSCALE)
-            print(f"Image: {database_image_path}; Is path: {folder_name}")
+            #print(f"Image: {database_image_path}; Is path: {folder_name}")
 
             # Perform the comparison using the SIFT comparer
             similarity_score = self.sift_comparer.compare_images(new_img, database_img)

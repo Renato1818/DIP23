@@ -46,20 +46,11 @@ if not database_image_paths:
 # Compare the new image with images from the database
 results = image_comparer.compare_with_database(new_image_path, database_image_paths)
 
-# Print the results
-"""aux=0
-for database_image_path, similarity_score in results:
-    print(f"Image: {aux}, Similarity Score: {similarity_score} \n")
-    aux=aux+1"""
-
 # Scope for each type of flowers
-types_with_scores = image_comparer.find_scope(types, results)        
-print(types_with_scores)
+types_with_scores = image_comparer.find_scope(types, results)  
 
 # The best type
 most_similar_type = image_comparer.best_scope(types_with_scores)
-print(most_similar_type)
-
 
 # Display the most similar image
 i=0
