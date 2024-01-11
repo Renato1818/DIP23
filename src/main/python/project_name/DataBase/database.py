@@ -6,14 +6,10 @@ import random
 class Database:
     def __init__(self, database_path):
         self.database_path = database_path
-        self.k = 10
+        self.k = 10 #to define
 
-    
+    #read all images inside a path
     def read_image_paths(self, folder_path):
-        """
-        Reads image paths from the database folder.
-        Returns a list of image paths. (image path, folder name).
-        """        
         image_paths = []
         folder_name = os.path.basename(folder_path)
         
@@ -32,13 +28,9 @@ class Database:
                 
         return image_paths
     
-    def read_image_paths_random(self, folder_path, folder_name):
-        """
-        Reads image paths from the database folder.
-        Returns a list of image paths. (image path, folder name).
-        """        
+    #read k random images inside a path
+    def read_image_paths_random(self, folder_path, folder_name):      
         image_paths = []
-        #folder_name = os.path.basename(folder_path)
         
         if not os.path.exists(self.database_path):
             print(f"Database path '{self.database_path}' does not exist.")
@@ -55,16 +47,14 @@ class Database:
         
         return image_paths
 
+    #read k random images inside a path and subfolders
     def read_images(self):
-        """
-        Reads image paths from each subfolder within the specified database folder.
-        Returns a list of tuples containing (image path, folder name).
-        """
         image_paths = []
+        types = []
 
         if not os.path.exists(self.database_path):
             print(f"Database path '{self.database_path}' does not exist.")
-            return image_paths
+            return types, image_paths
 
         #Search in subfolders
         subfolders = [f.path for f in os.scandir(self.database_path) if f.is_dir()]
@@ -72,19 +62,38 @@ class Database:
         if subfolders is None:
             folder_name = os.path.basename(self.database_path)
             image_paths.extend(self.read_image_paths_random(self.database_path, folder_name))
-            return types,image_paths
+            return folder_name,image_paths
          
-        types = []
         #aux=0
-        for subfolder in subfolders:
-            folder_name = os.path.basename(subfolder)
-            image_paths.extend(self.read_image_paths_random(subfolder, folder_name))
-            types.append(folder_name)
-                        
-            """#Controll
-            print(subfolder)
-            aux = aux +1
-            if (aux > 20):
-                return image_paths"""
+        #for subfolder in subfolders:
+        types, image_paths = self.aux_read_images(self.database_path)    
+        print("Here1")
+            #folder_name = os.path.basename(subfolder)
+            #image_paths.extend(self.read_image_paths_random(subfolder, folder_name))
+            #types.append(folder_name)
 
+        return types, image_paths
+    
+    def aux_read_images(self, folder):
+        image_paths = []
+        types = []
+        print("Here2")
+
+        #Search in subfolders
+        subfolders = [f.path for f in os.scandir(folder) if f.is_dir()]
+        print(subfolders)
+        
+        if not subfolders:
+            folder_name = os.path.basename(folder)
+            image_paths.extend(self.read_image_paths_random(folder, folder_name))
+            return folder_name,image_paths
+        
+        for subfolder in subfolders:
+            aux_types, aux_image_paths = self.aux_read_images(subfolder)
+            print(aux_types)
+            #folder_name = os.path.basename(subfolder)
+            #image_paths.extend(self.read_image_paths_random(subfolder, folder_name))
+            image_paths.extend(aux_image_paths)
+            types.append(aux_types)
+        
         return types, image_paths
