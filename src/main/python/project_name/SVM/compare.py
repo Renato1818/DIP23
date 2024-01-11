@@ -48,8 +48,8 @@ class Compare:
             if k == 0:
                 best_scope_name = type_name
                 best_scope_type = score/n_images
-                k=k+1
-            if score/n_images > best_scope_type:
+                k=k+1                
+            if (n_images != 0) and(score/n_images > best_scope_type):
                 best_scope_type = score/n_images
                 best_scope_name = type_name
         return best_scope_name

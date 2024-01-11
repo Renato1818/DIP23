@@ -67,7 +67,7 @@ class Database:
         #aux=0
         #for subfolder in subfolders:
         types, image_paths = self.aux_read_images(self.database_path)    
-        print("Here1")
+        #print("Here1")
             #folder_name = os.path.basename(subfolder)
             #image_paths.extend(self.read_image_paths_random(subfolder, folder_name))
             #types.append(folder_name)
@@ -77,11 +77,11 @@ class Database:
     def aux_read_images(self, folder):
         image_paths = []
         types = []
-        print("Here2")
+        #print("Here2")
 
         #Search in subfolders
         subfolders = [f.path for f in os.scandir(folder) if f.is_dir()]
-        print(subfolders)
+        #print(subfolders)
         
         if not subfolders:
             folder_name = os.path.basename(folder)
@@ -90,7 +90,7 @@ class Database:
         
         for subfolder in subfolders:
             aux_types, aux_image_paths = self.aux_read_images(subfolder)
-            print(aux_types)
+            #print(aux_types)
             #folder_name = os.path.basename(subfolder)
             #image_paths.extend(self.read_image_paths_random(subfolder, folder_name))
             image_paths.extend(aux_image_paths)
