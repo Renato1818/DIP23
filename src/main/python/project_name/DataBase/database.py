@@ -6,7 +6,7 @@ import random
 class Database:
     def __init__(self, database_path):
         self.database_path = database_path
-        self.k = 50 #to define
+        self.k = 20 #to define
 
     #read all images inside a path
     def read_image_paths(self, folder_path):

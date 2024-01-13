@@ -27,8 +27,7 @@ class Compare:
         self.terminal = terminal
         self.display = display
 
-    def compare (self, database: db, new_image_path):            
-
+    def compare (self, database: db, new_image_path):  
         # Read image paths from the database
         types, database_image_paths = database.read_images()
         if not database_image_paths: 
@@ -40,12 +39,18 @@ class Compare:
         ## Statistics ##        
         # Scope for each type of flowers
         types_with_scores = self.find_scope(types, results)        
-        #print(types_with_scores)
+        print(f"Best scope: {types_with_scores[0,0]} {types_with_scores[0,2]/types_with_scores[0,3]}")
 
-        # The best type
+        '''# The best type
         most_similar_type = self.best_scope(types_with_scores)
-        print(most_similar_type)
+        print(most_similar_type)'''
+        
+        # Display the most similar image
+        most_similar_result = max(results, key=lambda x: x.similarity_score)
+        print(f"Most similar image: {most_similar_result.folder_name}")
+        print(f"Similarity score: {most_similar_result.similarity_score}")
 
+        '''
         # Display the most similar image
         most_similar_result = results[0]  # Assuming results is not empty
         for result in results:
@@ -53,20 +58,24 @@ class Compare:
                 most_similar_result = result
                 print(most_similar_result.similarity_score)
 
-        most_similar_img = cv2.imread(most_similar_result.database_path, cv2.IMREAD_COLOR)
 
         print(f"Number of analyzed images: {len(results)}")
         print(f"Most similar folder: {most_similar_result.folder_name}")
-
+        '''
+        
+        most_similar_img = cv2.imread(most_similar_result.database_path, cv2.IMREAD_COLOR)
         # Plot the images
-        fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+        if self.display:
+            self.plot_images(new_image_path, most_similar_img, most_similar_result)
+
+        '''fig, axs = plt.subplots(1, 2, figsize=(10, 5))
         axs[0].imshow(cv2.cvtColor(cv2.imread(new_image_path, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB))
         axs[0].set_title("Image to classify")
         axs[0].axis("off")
         axs[1].imshow(cv2.cvtColor(most_similar_img, cv2.COLOR_BGR2RGB))
         axs[1].set_title(f"Most Similar Image\nType: {most_similar_result.folder_name}\nScore: {most_similar_result.similarity_score}")
         axs[1].axis("off")
-        plt.show()
+        plt.show()'''
 
         sift.compare_images_sift(new_image_path, most_similar_result.database_path)
 
@@ -86,7 +95,6 @@ class Compare:
             similarity_score = self.sift_comparer.compare_images(new_img, database_img)
 
             # Append the result to the list
-            #results.append((os.path.basename(new_image_path), folder_name, similarity_score, database_image_path))
             result = ResultStructure(
                 image_name=os.path.basename(new_image_path),
                 folder_name=folder_name,
@@ -100,33 +108,17 @@ class Compare:
                 print(f"Image: {result.image_name}, Folder: {result.folder_name}, Score: {result.similarity_score}")
             
         return results
-    
-    '''def find_scope(self, types, results):        
-        types_with_scores = [(t, 0, 0) for t in types]
-
-        for database_image_path, folder_name, similarity_score in results:
-            for i, (type_name, n_images, score) in enumerate(types_with_scores):
-                if type_name == folder_name:
-                    types_with_scores[i] = (type_name, n_images + 1, score + similarity_score)
-        return types_with_scores'''
-        
-    def find_scope(self, types, results: ResultStructure):
+            
+    def find_scope(self, types, results: list[ResultStructure]):
         types_array = np.array(types)
         types_with_scores = np.zeros((len(types), 3), dtype=object)
-
-        '''for image_name, folder_name, similarity_score, _ in results:
-            indices = np.where(types_array == folder_name)
-            for i in indices[0]:
-                types_with_scores[i, 0] = folder_name
-                types_with_scores[i, 1] += 1
-                types_with_scores[i, 2] += similarity_score'''
 
         for result in results:
             indices = np.where(types_array == result.folder_name)
             for i in indices[0]:
                 types_with_scores[i, 0] = result.folder_name
-                types_with_scores[i, 1] += 1
-                types_with_scores[i, 2] += result.similarity_score
+                types_with_scores[i, 1] += 1                        #number images
+                types_with_scores[i, 2] += result.similarity_score  #total scope
         
         # Filter out scores with 0 images
         types_with_scores = types_with_scores[types_with_scores[:, 1] > 0]
@@ -134,15 +126,21 @@ class Compare:
         # Print a bar plot
         if self.display:
             self.find_scope_plot_bar(types_with_scores)
+            
+        # Order types_with_scores by average similarity score in descending order
+        order = np.argsort(types_with_scores[:, 2] / np.maximum(1, types_with_scores[:, 1]))[::-1]
+        types_with_scores = types_with_scores[order]
+        
 
-        return types_with_scores.tolist()
+        #return types_with_scores.tolist()
+        return types_with_scores
     
     def find_scope_plot_bar(self, types_with_scores):
         type_names = types_with_scores[:, 0]
         num_images = types_with_scores[:, 1]
         avg_similarity = types_with_scores[:, 2] / np.maximum(1, num_images)  # Avoid division by zero
 
-        fig, ax = plt.subplots(figsize=(10, 6))
+        '''fig, ax = plt.subplots(figsize=(10, 6))
         width = 0.35
         ind = np.arange(len(type_names))
 
@@ -156,31 +154,39 @@ class Compare:
         ax.set_xticklabels(type_names, rotation='vertical')
         ax.legend()
 
-        plt.show()
-    
-    def plot_bar(self, results):
-        image_names = [result[0] for result in results]
-        folder_names = [result[1] for result in results]
-        similarity_scores = [result[2] for result in results]
-        database_paths = [result[3] for result in results]
-
+        plt.show()'''
+        
         fig, ax = plt.subplots(figsize=(10, 6))
-        width = 0.35
-        ind = np.arange(len(image_names))
+        ind = np.arange(len(type_names))
 
-        bars1 = ax.bar(ind, similarity_scores, width, label='Similarity Score')
+        bars = ax.bar(ind, avg_similarity, label='Average Similarity', color='tab:blue')
 
-        ax.set_xlabel('Image Names')
-        ax.set_ylabel('Score')
-        ax.set_title('Similarity Score by Image Name')
+        ax.set_xlabel('Flower Types')
+        ax.set_ylabel('Average Similarity')
+        ax.set_title('Average Similarity by Flower Type')
         ax.set_xticks(ind)
-        ax.set_xticklabels(image_names, rotation='vertical')  # Rotate labels vertically
+        ax.set_xticklabels(type_names, rotation='vertical')  # Rotate labels vertically
         ax.legend()
 
+        # Annotate bars with their corresponding values
+        for i, bar in enumerate(bars):
+            plt.text(bar.get_x() + bar.get_width() / 2 - 0.1, bar.get_height() + 0.02, f'{avg_similarity[i]:.2f}', ha='center')
+        
+        plt.show()
+    
+    def plot_images(self, new_image_path, most_similar_img, most_similar_result):
+        # Plot the images
+        fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+        axs[0].imshow(cv2.cvtColor(cv2.imread(new_image_path, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB))
+        axs[0].set_title("Image to classify")
+        axs[0].axis("off")
+        axs[1].imshow(cv2.cvtColor(most_similar_img, cv2.COLOR_BGR2RGB))
+        axs[1].set_title(f"Most Similar Image\nType: {most_similar_result.folder_name}\nScore: {most_similar_result.similarity_score}")
+        axs[1].axis("off")
         plt.show()
     
     def best_scope(self, types_with_scores):        
-        k=0
+        '''k=0
         for type_name, n_images, score in types_with_scores:
             if k == 0:
                 best_scope_name = type_name
@@ -192,4 +198,7 @@ class Compare:
             if (n_images != 0) and (score/n_images > best_scope_type):
                 best_scope_type = score/n_images
                 best_scope_name = type_name
-        return best_scope_name
+        return best_scope_name'''
+        
+        best_scope_index = np.argmax(types_with_scores[:, 2] / np.maximum(1, types_with_scores[:, 1]))
+        return types_with_scores[best_scope_index, 0]
