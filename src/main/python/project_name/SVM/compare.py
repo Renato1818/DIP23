@@ -81,15 +81,56 @@ class Compare:
 
         return similarity_scores
     
-    def find_scope(self, types, results):        
+    '''def find_scope(self, types, results):        
         types_with_scores = [(t, 0, 0) for t in types]
 
         for database_image_path, folder_name, similarity_score in results:
             for i, (type_name, n_images, score) in enumerate(types_with_scores):
                 if type_name == folder_name:
                     types_with_scores[i] = (type_name, n_images + 1, score + similarity_score)
-        return types_with_scores
-     
+        return types_with_scores'''
+        
+    def find_scope(self, types, results):
+        types_array = np.array(types)
+        types_with_scores = np.zeros((len(types), 3), dtype=object)
+
+        for database_image_path, folder_name, similarity_score in results:
+            indices = np.where(types_array == folder_name)
+            for i in indices[0]:
+                types_with_scores[i, 0] = folder_name
+                types_with_scores[i, 1] += 1
+                types_with_scores[i, 2] += similarity_score
+
+
+        # Filter out scores with 0 images
+        types_with_scores = types_with_scores[types_with_scores[:, 1] > 0]
+        
+        # Print a bar plot
+        self.plot_bar(types_with_scores)
+
+        return types_with_scores.tolist()
+    
+    def plot_bar(self, types_with_scores):
+        type_names = types_with_scores[:, 0]
+        num_images = types_with_scores[:, 1]
+        avg_similarity = types_with_scores[:, 2] / np.maximum(1, num_images)  # Avoid division by zero
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        width = 0.35
+        ind = np.arange(len(type_names))
+
+        bars1 = ax.bar(ind, num_images, width, label='Number of Images')
+        bars2 = ax.bar(ind + width, avg_similarity, width, label='Average Similarity')
+
+        ax.set_xlabel('Flower Types')
+        ax.set_ylabel('Count / Score')
+        ax.set_title('Number of Images and Average Similarity by Flower Type')
+        ax.set_xticks(ind + width / 2)
+        ax.set_xticklabels(type_names, rotation='vertical')
+        ax.legend()
+
+        plt.show()
+    
     def best_scope(self, types_with_scores):        
         k=0
         for type_name, n_images, score in types_with_scores:
