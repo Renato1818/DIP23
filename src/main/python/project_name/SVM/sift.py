@@ -27,7 +27,9 @@ class Sift:
         matches = self.bf.knnMatch(des1, des2, k=2)
 
         # Apply ratio test
-        good_matches = [m for m, n in matches if m.distance < 0.75 * n.distance]
+        #good_matches = [m for m, n in matches if m.distance < 0.75 * n.distance]
+        good_matches = [m for m, n in matches if hasattr(m, 'distance') and hasattr(n, 'distance') and m.distance < 0.75 * n.distance]
+
 
         # Compute a similarity score (for example, the number of good matches)
         similarity_score = len(good_matches)

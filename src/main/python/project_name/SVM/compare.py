@@ -22,8 +22,10 @@ class ResultStructure:
 
 
 class Compare:
-    def __init__(self, sift_comparer):
+    def __init__(self, sift_comparer, terminal=False, display=True):
         self.sift_comparer = sift_comparer
+        self.terminal = terminal
+        self.display = display
 
     def compare (self, database: db, new_image_path):            
 
@@ -35,41 +37,39 @@ class Compare:
         # Compare the test image with images from the database
         results = self.compare_with_database(new_image_path, database_image_paths)
 
-        ## Statistics ##
-        
+        ## Statistics ##        
         # Scope for each type of flowers
         types_with_scores = self.find_scope(types, results)        
-        print(types_with_scores)
+        #print(types_with_scores)
 
         # The best type
         most_similar_type = self.best_scope(types_with_scores)
         print(most_similar_type)
 
         # Display the most similar image
-        i=0
-        most_similar_path, most_similar_folder, most_similarity_score = results[i]
-        for database_image_path, folder_name, similarity_score in results:
-            if similarity_score > most_similarity_score:
-                most_similar_path, most_similar_folder, most_similarity_score = results[i]
-                print(most_similarity_score)
-            i=i+1
-                
-        most_similar_img = cv2.imread(most_similar_path, cv2.IMREAD_COLOR)
+        most_similar_result = results[0]  # Assuming results is not empty
+        for result in results:
+            if result.similarity_score > most_similar_result.similarity_score:
+                most_similar_result = result
+                print(most_similar_result.similarity_score)
 
-        print(f"Number of analise images: {len(results)}" )
-        print(f"Most similar folder: {most_similar_folder}" )
+        most_similar_img = cv2.imread(most_similar_result.database_path, cv2.IMREAD_COLOR)
 
-        # Plot the images 
+        print(f"Number of analyzed images: {len(results)}")
+        print(f"Most similar folder: {most_similar_result.folder_name}")
+
+        # Plot the images
         fig, axs = plt.subplots(1, 2, figsize=(10, 5))
         axs[0].imshow(cv2.cvtColor(cv2.imread(new_image_path, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB))
         axs[0].set_title("Image to classify")
         axs[0].axis("off")
         axs[1].imshow(cv2.cvtColor(most_similar_img, cv2.COLOR_BGR2RGB))
-        axs[1].set_title(f"Most Similar Image\nType: {most_similar_folder}\nScore: {most_similarity_score}")
+        axs[1].set_title(f"Most Similar Image\nType: {most_similar_result.folder_name}\nScore: {most_similar_result.similarity_score}")
         axs[1].axis("off")
         plt.show()
 
-        sift.compare_images_sift(new_image_path, most_similar_path)
+        sift.compare_images_sift(new_image_path, most_similar_result.database_path)
+
     
     def compare_with_database(self, new_image_path, database_image_paths):
         results = []
@@ -95,6 +95,10 @@ class Compare:
             )
             results.append(result)
 
+            
+            if self.terminal:
+                print(f"Image: {result.image_name}, Folder: {result.folder_name}, Score: {result.similarity_score}")
+            
         return results
     
     '''def find_scope(self, types, results):        
@@ -128,7 +132,8 @@ class Compare:
         types_with_scores = types_with_scores[types_with_scores[:, 1] > 0]
         
         # Print a bar plot
-        self.find_scope_plot_bar(types_with_scores)
+        if self.display:
+            self.find_scope_plot_bar(types_with_scores)
 
         return types_with_scores.tolist()
     
