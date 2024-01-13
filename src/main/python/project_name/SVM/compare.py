@@ -11,12 +11,21 @@ import DataBase.database as db
 from SVM import compare as cp
 from SVM import sift
 from tqdm import tqdm
+import os
+
+class ResultStructure:
+    def __init__(self, image_name, folder_name, similarity_score, database_path):
+        self.image_name = image_name
+        self.folder_name = folder_name
+        self.similarity_score = similarity_score
+        self.database_path = database_path
+
 
 class Compare:
     def __init__(self, sift_comparer):
         self.sift_comparer = sift_comparer
 
-    def compare (self, database, new_image_path):            
+    def compare (self, database: db, new_image_path):            
 
         # Read image paths from the database
         types, database_image_paths = database.read_images()
@@ -63,7 +72,7 @@ class Compare:
         sift.compare_images_sift(new_image_path, most_similar_path)
     
     def compare_with_database(self, new_image_path, database_image_paths):
-        similarity_scores = []
+        results = []
 
         # Load the new image
         new_img = cv2.imread(new_image_path, cv2.IMREAD_GRAYSCALE)
@@ -77,9 +86,16 @@ class Compare:
             similarity_score = self.sift_comparer.compare_images(new_img, database_img)
 
             # Append the result to the list
-            similarity_scores.append((database_image_path, folder_name, similarity_score))
+            #results.append((os.path.basename(new_image_path), folder_name, similarity_score, database_image_path))
+            result = ResultStructure(
+                image_name=os.path.basename(new_image_path),
+                folder_name=folder_name,
+                similarity_score=similarity_score,
+                database_path=database_image_path
+            )
+            results.append(result)
 
-        return similarity_scores
+        return results
     
     '''def find_scope(self, types, results):        
         types_with_scores = [(t, 0, 0) for t in types]
@@ -90,27 +106,33 @@ class Compare:
                     types_with_scores[i] = (type_name, n_images + 1, score + similarity_score)
         return types_with_scores'''
         
-    def find_scope(self, types, results):
+    def find_scope(self, types, results: ResultStructure):
         types_array = np.array(types)
         types_with_scores = np.zeros((len(types), 3), dtype=object)
 
-        for database_image_path, folder_name, similarity_score in results:
+        '''for image_name, folder_name, similarity_score, _ in results:
             indices = np.where(types_array == folder_name)
             for i in indices[0]:
                 types_with_scores[i, 0] = folder_name
                 types_with_scores[i, 1] += 1
-                types_with_scores[i, 2] += similarity_score
+                types_with_scores[i, 2] += similarity_score'''
 
-
+        for result in results:
+            indices = np.where(types_array == result.folder_name)
+            for i in indices[0]:
+                types_with_scores[i, 0] = result.folder_name
+                types_with_scores[i, 1] += 1
+                types_with_scores[i, 2] += result.similarity_score
+        
         # Filter out scores with 0 images
         types_with_scores = types_with_scores[types_with_scores[:, 1] > 0]
         
         # Print a bar plot
-        self.plot_bar(types_with_scores)
+        self.find_scope_plot_bar(types_with_scores)
 
         return types_with_scores.tolist()
     
-    def plot_bar(self, types_with_scores):
+    def find_scope_plot_bar(self, types_with_scores):
         type_names = types_with_scores[:, 0]
         num_images = types_with_scores[:, 1]
         avg_similarity = types_with_scores[:, 2] / np.maximum(1, num_images)  # Avoid division by zero
@@ -127,6 +149,27 @@ class Compare:
         ax.set_title('Number of Images and Average Similarity by Flower Type')
         ax.set_xticks(ind + width / 2)
         ax.set_xticklabels(type_names, rotation='vertical')
+        ax.legend()
+
+        plt.show()
+    
+    def plot_bar(self, results):
+        image_names = [result[0] for result in results]
+        folder_names = [result[1] for result in results]
+        similarity_scores = [result[2] for result in results]
+        database_paths = [result[3] for result in results]
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        width = 0.35
+        ind = np.arange(len(image_names))
+
+        bars1 = ax.bar(ind, similarity_scores, width, label='Similarity Score')
+
+        ax.set_xlabel('Image Names')
+        ax.set_ylabel('Score')
+        ax.set_title('Similarity Score by Image Name')
+        ax.set_xticks(ind)
+        ax.set_xticklabels(image_names, rotation='vertical')  # Rotate labels vertically
         ax.legend()
 
         plt.show()
