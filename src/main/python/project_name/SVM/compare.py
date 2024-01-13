@@ -39,8 +39,7 @@ class Compare:
 
         ## Statistics ##        
         # Scope for each type of flowers
-        types_with_scores = self.find_scope(types, results)        
-        #print(types_with_scores)
+        types_with_scores = self.find_scope(types, results)  
 
         # The best type
         most_similar_type = self.best_scope(types_with_scores)
@@ -100,26 +99,10 @@ class Compare:
                 print(f"Image: {result.image_name}, Folder: {result.folder_name}, Score: {result.similarity_score}")
             
         return results
-    
-    '''def find_scope(self, types, results):        
-        types_with_scores = [(t, 0, 0) for t in types]
-
-        for database_image_path, folder_name, similarity_score in results:
-            for i, (type_name, n_images, score) in enumerate(types_with_scores):
-                if type_name == folder_name:
-                    types_with_scores[i] = (type_name, n_images + 1, score + similarity_score)
-        return types_with_scores'''
         
     def find_scope(self, types, results: ResultStructure):
         types_array = np.array(types)
         types_with_scores = np.zeros((len(types), 3), dtype=object)
-
-        '''for image_name, folder_name, similarity_score, _ in results:
-            indices = np.where(types_array == folder_name)
-            for i in indices[0]:
-                types_with_scores[i, 0] = folder_name
-                types_with_scores[i, 1] += 1
-                types_with_scores[i, 2] += similarity_score'''
 
         for result in results:
             indices = np.where(types_array == result.folder_name)
