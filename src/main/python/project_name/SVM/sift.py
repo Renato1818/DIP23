@@ -15,6 +15,10 @@ class Sift:
         kp1, des1 = self.sift.detectAndCompute(img1, None)
         kp2, des2 = self.sift.detectAndCompute(img2, None)
 
+        if des1 is None or des2 is None:
+        # Handle the case where SIFT fails to detect keypoints or compute descriptors
+            return 0
+
         # Ensure descriptors have the same data type
         des1 = np.float32(des1)
         des2 = np.float32(des2)
@@ -23,11 +27,13 @@ class Sift:
         matches = self.bf.knnMatch(des1, des2, k=2)
 
         # Apply ratio test
-        good_matches = [m for m, n in matches if m.distance < 0.75 * n.distance]
+        #good_matches = [m for m, n in matches if m.distance < 0.75 * n.distance]
+        good_matches = [m for m, n in matches if hasattr(m, 'distance') and hasattr(n, 'distance') and m.distance < 0.75 * n.distance]
+
 
         # Compute a similarity score (for example, the number of good matches)
         similarity_score = len(good_matches)
-
+        
         return similarity_score
     
 def compare_images_sift(image1, image2):
