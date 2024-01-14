@@ -6,7 +6,7 @@ import random
 class Database:
     def __init__(self, database_path):
         self.database_path = database_path
-        self.k = 20 #to define
+        self.k = 200 #to define
         self.test = 1
 
     def change_k(self, k: int):
@@ -74,25 +74,41 @@ class Database:
         labels = []
         test_image_paths = []
         test_labels = []
-        trainning_image_paths = []
+        training_image_paths = []
         #training_labels = []
 
         if not os.path.exists(self.database_path):
             print(f"Database path '{self.database_path}' does not exist.")
-            return labels, test_image_paths, test_labels, trainning_image_paths
+            return labels, test_image_paths, test_labels, training_image_paths
 
         for folder_path, _, _ in os.walk(self.database_path):
             folder_name = os.path.basename(folder_path)
             aux_labels, aux_image_paths = self.read_image_paths_random(folder_path, folder_name)
-            labels.extend(aux_labels)
+            if aux_image_paths:
+                labels.extend(aux_labels)
 
-            # Separate a portion of images as test images
+                #image_paths.append((file_path, folder_name))
+                aux=0
+                for file_path, folder_name in aux_image_paths:
+                    if aux < self.test:
+                        test_image_paths.append(file_path)
+                        test_labels.extend(aux_labels)
+                    else:
+                        training_image_paths.append((file_path, folder_name))
+                    aux+=1
+                
+            
+            '''# Separate a portion of images as test images
             num_test_images = min(self.test, len(aux_image_paths))
             test_labels.extend([folder_name] * num_test_images)
             test_image_paths.extend([os.path.join(folder_path, os.path.basename(img_path)) for _, img_path in aux_image_paths[:num_test_images]])
 
             # The remaining images are used for training
             #training_labels.extend([folder_name] * (len(aux_image_paths) - num_test_images))
-            trainning_image_paths.extend([os.path.join(folder_path, os.path.basename(img_path)) for _, img_path in aux_image_paths[num_test_images:]])
+            #training_image_paths.extend([os.path.join(folder_path, os.path.basename(img_path)) for _, img_path in aux_image_paths[num_test_images:]])
+            training_image_paths.extend([(os.path.join(folder_path, os.path.basename(img_path)), folder_name) for _, img_path in aux_image_paths[num_test_images:]])
+            '''
 
-        return labels, test_image_paths, test_labels, trainning_image_paths
+            #print('Trainning_images_paths')
+            #print(training_image_paths)
+        return labels, test_image_paths, test_labels, training_image_paths

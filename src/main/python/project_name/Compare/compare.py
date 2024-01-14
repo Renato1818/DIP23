@@ -22,13 +22,39 @@ class ResultStructure:
 
 
 class Compare:
-    def __init__(self, sift_comparer, terminal=True, display=True):
+    def __init__(self, sift_comparer, terminal=True, display=False):
         self.sift_comparer = sift_comparer
         self.terminal = terminal
         self.display = display
         self.plot = pt.GuiPlot()
         self.term = term.Terminal()
-  
+    
+    
+    def compare_and_display_results(self, database: db):
+        labels, test_image_paths, test_labels, database_image_paths = database.read_test_trainning_images()
+
+        if not labels or not database_image_paths:
+            print("No images to compare.")
+            return
+
+        # Combine labels and image paths into image_test_vector for training
+        training_image_test_vector = list(zip(database_image_paths, labels))
+
+        # Combine test labels and test image paths into test_image_test_vector
+        test_image_test_vector = list(zip(test_image_paths, labels))
+
+        # Combine both vectors for display
+        #all_image_test_vector = training_image_test_vector + test_image_test_vector
+
+        all_results = self.compare_vector(database, labels, test_image_paths, database_image_paths)
+
+        if all_results == -1:
+            print("No results to compare.")
+            return
+
+        # Create a table to display the results
+        self.display_results_table(all_results, test_labels)        
+    
     def compare_vector(self, database: db, types, test_image_paths, database_image_paths):
         # Initialize an empty list to store results for each image
         all_results = []        
@@ -73,7 +99,13 @@ class Compare:
 
     def compare_with_database(self, new_image_path, database_image_paths):
         results = []
-
+        '''
+        print("New image:")
+        print(new_image_path)
+        
+        print("Database image:")
+        print(database_image_paths)'''
+        
         # Load the new image
         new_img = cv2.imread(new_image_path, cv2.IMREAD_GRAYSCALE)
 
@@ -123,38 +155,13 @@ class Compare:
         # return types_with_scores.tolist()
         return types_with_scores
 
-
-    def compare_and_display_results(self, database: db):
-        labels, test_image_paths, test_labels, database_image_paths = database.read_test_trainning_images()
-
-        if not labels or not database_image_paths:
-            print("No images to compare.")
-            return
-
-        # Combine labels and image paths into image_test_vector for training
-        training_image_test_vector = list(zip(database_image_paths, labels))
-
-        # Combine test labels and test image paths into test_image_test_vector
-        test_image_test_vector = list(zip(test_image_paths, labels))
-
-        # Combine both vectors for display
-        #all_image_test_vector = training_image_test_vector + test_image_test_vector
-
-        all_results = self.compare_vector(database, labels, test_image_paths, database_image_paths)
-
-        if all_results == -1:
-            print("No results to compare.")
-            return
-
-        # Create a table to display the results
-        self.display_results_table(all_results, test_labels)        
-    
     def display_results_table(self, all_results, expected_results):
         data = {
             "Image Path": [result.image_name for result in all_results],
             "Expected Label": expected_results,
             "Predicted Label": [result.folder_name for result in all_results],
             "Similarity Score": [result.similarity_score for result in all_results],
+            #"Error Percentage": [100 * (1 if label != result.folder_name else 0) for result, (image_path, label) in zip(all_results, expected_results)],
         }
 
         df = pd.DataFrame(data)
