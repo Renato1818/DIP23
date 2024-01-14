@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import SVM.sift as sift
 import SVM.sufr as surf
 import DataBase.database as db
-from SVM import compare as cp
+from Compare import compare as cp
 from SVM import sift
 import tkinter as tk
 from tkinter.filedialog import askdirectory

@@ -8,6 +8,9 @@ class Database:
         self.database_path = database_path
         self.k = 20 #to define
 
+    def change_k(self, k: int):
+        self.k = k
+    
     #read all images inside a path
     def read_image_paths(self, folder_path):
         image_paths = []

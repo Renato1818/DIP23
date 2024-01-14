@@ -6,10 +6,10 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 import SVM.sift as sift
-import SVM.sufr as surf
+#import SVM.sufr as surf
 import DataBase.database as db
-from SVM import compare as cp
-from SVM import sift
+#from main.python.project_name.Compare import compare as cp
+#from SVM import sift
 from tqdm import tqdm
 import os
 
@@ -34,7 +34,13 @@ class Compare:
         for image_test in image_test_vector:
             # Compare the current image with images from the database
             results = self.compare(database, image_test)
-            all_results.append(results)
+            if results != -1:
+                all_results.append(results)
+        
+        if not all_results:
+            return -1
+        
+        return all_results        
         
     def compare (self, database: db, image_test):  
         # Read image paths from the database
@@ -86,7 +92,7 @@ class Compare:
         axs[1].axis("off")
         plt.show()'''
 
-        sift.compare_images_sift(image_test, most_similar_result.database_path)
+        #sift.compare_images_sift(image_test, most_similar_result.database_path)
         
         return results
 
@@ -145,7 +151,7 @@ class Compare:
         #return types_with_scores.tolist()
         return types_with_scores
     
-    def find_scope_plot_bar(self, types_with_scores):
+    def find_scope_plot_bar(self, types_with_scores, figsize=(10, 6)):
         type_names = types_with_scores[:, 0]
         num_images = types_with_scores[:, 1]
         avg_similarity = types_with_scores[:, 2] / np.maximum(1, num_images)  # Avoid division by zero
@@ -166,7 +172,10 @@ class Compare:
 
         plt.show()'''
         
-        fig, ax = plt.subplots(figsize=(10, 6))
+        # Create a figure with a specified size
+        #plt.figure(figsize=figsize)
+    
+        fig, ax = plt.subplots(figsize=figsize)
         ind = np.arange(len(type_names))
 
         bars = ax.bar(ind, avg_similarity, label='Average Similarity', color='tab:blue')
@@ -182,7 +191,7 @@ class Compare:
         for i, bar in enumerate(bars):
             plt.text(bar.get_x() + bar.get_width() / 2 - 0.1, bar.get_height() + 0.02, f'{avg_similarity[i]:.2f}', ha='center')
         
-        plt.show()
+        plt.show(block=False)
     
     def plot_images(self, new_image_path, most_similar_img, most_similar_result):
         # Plot the images
