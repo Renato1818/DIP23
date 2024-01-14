@@ -42,8 +42,9 @@ database = db.Database(database_path)
 image_comparer = cp.Compare(sift.Sift())
 
 
-types, database_image_paths = database.read_all_k_images()
+'''types, database_image_paths = database.read_all_k_images()
 if image_comparer.compare(database, types, new_image_path, database_image_paths) == -1:     
     print("Error")
-    sys.exit()
+    sys.exit()'''
 
+image_comparer.compare_and_display_results(database)

@@ -79,7 +79,7 @@ class Database:
 
         if not os.path.exists(self.database_path):
             print(f"Database path '{self.database_path}' does not exist.")
-            return test_labels, test_image_paths, training_labels, trainning_image_paths
+            return labels, test_image_paths, test_labels, trainning_image_paths
 
         for folder_path, _, _ in os.walk(self.database_path):
             folder_name = os.path.basename(folder_path)
