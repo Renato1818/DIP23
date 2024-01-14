@@ -53,7 +53,8 @@ class Compare:
             return
 
         # Create a table to display the results
-        self.display_results_table(all_results, test_labels)        
+        self.display_results_table(all_results, test_labels)    
+        self.accuracy_results(all_results, test_labels)      
     
     def compare_vector(self, database: db, types, test_image_paths, database_image_paths):
         # Initialize an empty list to store results for each image
@@ -167,3 +168,12 @@ class Compare:
         df = pd.DataFrame(data)
         print("Results Table:")
         print(df)
+        
+    def accuracy_results(self, all_results, expected_results):
+        correct_predictions = sum(1 for result, expected in zip(all_results, expected_results) if result.folder_name == expected)
+        total_predictions = len(all_results)
+
+        print(f"Correct_predictions: {correct_predictions} (total= {total_predictions})")
+        accuracy = correct_predictions / total_predictions
+
+        print(f"Accuracy: {accuracy}")
