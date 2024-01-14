@@ -27,19 +27,28 @@ class Compare:
         self.terminal = terminal
         self.display = display
 
-    def compare (self, database: db, new_image_path):  
+    def compare_vector(self, database: db, image_test_vector):
+        # Initialize an empty list to store results for each image
+        all_results = []
+
+        for image_test in image_test_vector:
+            # Compare the current image with images from the database
+            results = self.compare(database, image_test)
+            all_results.append(results)
+        
+    def compare (self, database: db, image_test):  
         # Read image paths from the database
         types, database_image_paths = database.read_images()
         if not database_image_paths: 
             return -1
 
         # Compare the test image with images from the database
-        results = self.compare_with_database(new_image_path, database_image_paths)
+        results = self.compare_with_database(image_test, database_image_paths)
 
         ## Statistics ##        
         # Scope for each type of flowers
         types_with_scores = self.find_scope(types, results)        
-        print(f"Best scope: {types_with_scores[0,0]} {types_with_scores[0,2]/types_with_scores[0,3]}")
+        print(f"Best scope: {types_with_scores[0,0]} {types_with_scores[0,2]/types_with_scores[0,1]}")
 
         '''# The best type
         most_similar_type = self.best_scope(types_with_scores)
@@ -66,7 +75,7 @@ class Compare:
         most_similar_img = cv2.imread(most_similar_result.database_path, cv2.IMREAD_COLOR)
         # Plot the images
         if self.display:
-            self.plot_images(new_image_path, most_similar_img, most_similar_result)
+            self.plot_images(image_test, most_similar_img, most_similar_result)
 
         '''fig, axs = plt.subplots(1, 2, figsize=(10, 5))
         axs[0].imshow(cv2.cvtColor(cv2.imread(new_image_path, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB))
@@ -77,7 +86,9 @@ class Compare:
         axs[1].axis("off")
         plt.show()'''
 
-        sift.compare_images_sift(new_image_path, most_similar_result.database_path)
+        sift.compare_images_sift(image_test, most_similar_result.database_path)
+        
+        return results
 
     
     def compare_with_database(self, new_image_path, database_image_paths):
@@ -102,7 +113,6 @@ class Compare:
                 database_path=database_image_path
             )
             results.append(result)
-
             
             if self.terminal:
                 print(f"Image: {result.image_name}, Folder: {result.folder_name}, Score: {result.similarity_score}")
@@ -185,20 +195,3 @@ class Compare:
         axs[1].axis("off")
         plt.show()
     
-    def best_scope(self, types_with_scores):        
-        '''k=0
-        for type_name, n_images, score in types_with_scores:
-            if k == 0:
-                best_scope_name = type_name
-                if (n_images != 0):
-                    best_scope_type = score/n_images
-                else:
-                    best_scope_type = 0
-                k=k+1                
-            if (n_images != 0) and (score/n_images > best_scope_type):
-                best_scope_type = score/n_images
-                best_scope_name = type_name
-        return best_scope_name'''
-        
-        best_scope_index = np.argmax(types_with_scores[:, 2] / np.maximum(1, types_with_scores[:, 1]))
-        return types_with_scores[best_scope_index, 0]
