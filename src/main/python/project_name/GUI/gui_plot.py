@@ -2,6 +2,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import cv2
+import pandas as pd
+import tkinter as tk
+from tkinter import ttk
 
 class GuiPlot:
     def __init__(self, figsize=(8, 5)):

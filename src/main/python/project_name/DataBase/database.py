@@ -7,6 +7,7 @@ class Database:
     def __init__(self, database_path):
         self.database_path = database_path
         self.k = 20 #to define
+        self.test = 1
 
     def change_k(self, k: int):
         self.k = k
@@ -53,7 +54,7 @@ class Database:
         return types, image_paths
 
     #read k random images inside a path and subfolders
-    def read_images(self):
+    def read_all_k_images(self):
         image_paths = []
         types = []
 
@@ -69,3 +70,29 @@ class Database:
 
         return types, image_paths
     
+    def read_test_trainning_images(self):
+        labels = []
+        test_image_paths = []
+        test_labels = []
+        trainning_image_paths = []
+        #training_labels = []
+
+        if not os.path.exists(self.database_path):
+            print(f"Database path '{self.database_path}' does not exist.")
+            return test_labels, test_image_paths, training_labels, trainning_image_paths
+
+        for folder_path, _, _ in os.walk(self.database_path):
+            folder_name = os.path.basename(folder_path)
+            aux_labels, aux_image_paths = self.read_image_paths_random(folder_path, folder_name)
+            labels.extend(aux_labels)
+
+            # Separate a portion of images as test images
+            num_test_images = min(self.test, len(aux_image_paths))
+            test_labels.extend([folder_name] * num_test_images)
+            test_image_paths.extend([os.path.join(folder_path, os.path.basename(img_path)) for _, img_path in aux_image_paths[:num_test_images]])
+
+            # The remaining images are used for training
+            #training_labels.extend([folder_name] * (len(aux_image_paths) - num_test_images))
+            trainning_image_paths.extend([os.path.join(folder_path, os.path.basename(img_path)) for _, img_path in aux_image_paths[num_test_images:]])
+
+        return labels, test_image_paths, test_labels, trainning_image_paths
