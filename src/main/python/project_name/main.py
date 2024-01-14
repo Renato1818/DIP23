@@ -26,6 +26,7 @@ test_figure_path2 = "C:/Users/asus/GitHub_clones/DIP23/src/main/python/project_n
 #### ASK DATABASE ####
 # Set the paths for the database
 '''database_path = askdirectory()
+#database_path = path_directory()
 if not database_path:
     print("No directory selected. Exiting program.")
     sys.exit()'''
