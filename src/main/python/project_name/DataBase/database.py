@@ -60,15 +60,6 @@ class Database:
         if not os.path.exists(self.database_path):
             print(f"Database path '{self.database_path}' does not exist.")
             return types, image_paths
-
-        '''#Search in subfolders
-        subfolders = [f.path for f in os.scandir(self.database_path) if f.is_dir()]
-        
-        if subfolders is None:
-            folder_name = os.path.basename(self.database_path)
-            image_paths.extend(self.read_image_paths_random(self.database_path, folder_name))
-            print("Here2")
-            return [folder_name], image_paths'''
         
         for folder_path, _, _ in os.walk(self.database_path):
             folder_name = os.path.basename(folder_path)

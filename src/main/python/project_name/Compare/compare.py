@@ -19,7 +19,7 @@ class ResultStructure:
 
 
 class Compare:
-    def __init__(self, sift_comparer, terminal=False, display=True):
+    def __init__(self, sift_comparer, terminal=True, display=False):
         self.sift_comparer = sift_comparer
         self.terminal = terminal
         self.display = display
@@ -55,11 +55,10 @@ class Compare:
         types_with_scores = self.find_scope(types, results)
         # Display the most similar image
         most_similar_result = max(results, key=lambda x: x.similarity_score)
-        self.term.similar_image(types_with_scores, most_similar_result)
+        if self.terminal:
+            self.term.similar_image(types_with_scores, most_similar_result)
 
-        most_similar_img = cv2.imread(
-            most_similar_result.database_path, cv2.IMREAD_COLOR
-        )
+        most_similar_img = cv2.imread(most_similar_result.database_path, cv2.IMREAD_COLOR)
         # Plot the images
         if self.display:
             self.plot.plot_images(image_test, most_similar_img, most_similar_result)
@@ -75,11 +74,9 @@ class Compare:
         new_img = cv2.imread(new_image_path, cv2.IMREAD_GRAYSCALE)
 
         for database_image_path, folder_name in tqdm(
-            database_image_paths, desc="Comparing images", unit="image"
-        ):
+            database_image_paths, desc="Comparing images", unit="image"):
             # Load the database image
             database_img = cv2.imread(database_image_path, cv2.IMREAD_GRAYSCALE)
-            # print(f"Image: {database_image_path}; Is path: {folder_name}")
 
             # Perform the comparison using the SIFT comparer
             similarity_score = self.sift_comparer.compare_images(new_img, database_img)
@@ -119,9 +116,7 @@ class Compare:
             self.plot.find_scope_plot_bar(types_with_scores)
 
         # Order types_with_scores by average similarity score in descending order
-        order = np.argsort(
-            types_with_scores[:, 2] / np.maximum(1, types_with_scores[:, 1])
-        )[::-1]
+        order = np.argsort(types_with_scores[:, 2] / np.maximum(1, types_with_scores[:, 1]))[::-1]
         types_with_scores = types_with_scores[order]
 
         # return types_with_scores.tolist()
