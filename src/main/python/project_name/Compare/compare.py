@@ -100,12 +100,6 @@ class Compare:
 
     def compare_with_database(self, new_image_path, database_image_paths):
         results = []
-        '''
-        print("New image:")
-        print(new_image_path)
-        
-        print("Database image:")
-        print(database_image_paths)'''
         
         # Load the new image
         new_img = cv2.imread(new_image_path, cv2.IMREAD_GRAYSCALE)
@@ -125,10 +119,7 @@ class Compare:
                 database_path=database_image_path,
             )
             results.append(result)
-
-            '''if self.terminal:
-                print(f"Image: {result.image_name}, Folder: {result.folder_name}, Score: {result.similarity_score}")'''
-            
+  
         return results
 
     def find_scope(self, types, results: list[ResultStructure]):
