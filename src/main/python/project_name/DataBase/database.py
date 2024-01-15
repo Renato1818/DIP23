@@ -12,6 +12,9 @@ class Database:
     def change_k(self, k: int):
         self.k = k
     
+    def change_test(self, test: int):
+        self.test = test
+    
     #read all images inside a path
     def read_image_paths(self, folder_path):
         image_paths = []
