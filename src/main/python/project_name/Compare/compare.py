@@ -22,7 +22,7 @@ class ResultStructure:
 
 
 class Compare:
-    def __init__(self, sift_comparer, terminal=True, display=False):
+    def __init__(self, sift_comparer, terminal=True, display=True):
         self.sift_comparer = sift_comparer
         self.terminal = terminal
         self.display = display

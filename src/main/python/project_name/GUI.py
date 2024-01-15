@@ -2,14 +2,16 @@ import sys, os, time
 from PyQt5.QtWidgets import QDialog, QLineEdit, QComboBox, QApplication, QMainWindow, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog, QWidget, QRubberBand
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt, QRect, QPoint, QSize
-from ModelEstimator import ModelEstimator
+#from ModelEstimator import ModelEstimator
 
+import DataBase.database as db
+from Compare import compare as cp
+import SVM.sift as sift
 
 
 class GUI(QMainWindow):
     def __init__(self):
         super().__init__()
-
         self.initUI()
 
     def initUI(self):
@@ -95,8 +97,13 @@ class GUI(QMainWindow):
         self.rect_size = 0
         self.rubber_band = QRubberBand(QRubberBand.Rectangle, self.image_label)
         self.selected_option = 'Alessandro'
-        self.model = ModelEstimator()
+        #self.model = ModelEstimator()
         self.temp_path = os.path.dirname(os.path.abspath(__file__)) + "/temp.jpg"
+        
+        #RENATO INICIALAZION
+        database_path="C:/Users/asus/GitHub_clones/DIP23/src/resources/data_base"
+        self.database = db.Database(database_path)
+        self.image_comparer = cp.Compare(sift.Sift())
 
     def open_image(self):
         options = QFileDialog.Options()
@@ -120,12 +127,14 @@ class GUI(QMainWindow):
         elif self.selected_option == 'Renato':
             self.computeRenato()
 
-    def computeAlessandro(self):
-        self.status_label.show()
+    def computeAlessandro(self):        
+        print("Not comput Alessandro anymore.")
+        '''self.status_label.show()
         time.sleep(1)
         prediction = self.model.predict(self.temp_path)
         self.update_results(prediction[0], prediction[1])
-        self.status_label.hide()
+        self.status_label.hide()'''
+        return
         
     def computeLIME(self):
         self.status_label.show()
@@ -139,6 +148,11 @@ class GUI(QMainWindow):
 
     def computeRenato(self):
         print("Compute Renato is called.")
+        types, database_image_paths = self.database.read_all_k_images()
+        prediction = self.image_comparer.compare(self.database, types, self.temp_path, database_image_paths)
+        self.update_results(prediction.folder_name, str(prediction.similarity_score))
+        self.status_label.hide()
+        
         
     def update_results(self, predicted_value, confidence):
         self.predicted_value_textbox.setText(predicted_value)

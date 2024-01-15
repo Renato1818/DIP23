@@ -6,7 +6,7 @@ import random
 class Database:
     def __init__(self, database_path):
         self.database_path = database_path
-        self.k = 10 #to define
+        self.k = 100 #to define
         self.test = 1
 
     def change_k(self, k: int):
