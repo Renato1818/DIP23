@@ -33,11 +33,11 @@ new_image_path = test_figure_path2
 database = db.Database(database_path)
 image_comparer = cp.Compare(sift.Sift())
 
-#database.change_k(20)
-#image_comparer.compare_and_display_results(database)
+database.change_k(20)
+image_comparer.compare_and_display_results(database)
 ##################################################################
 
-database_path= "C:/Users/asus/GitHub_clones/DIP23/src/resources/data_base"
+'''database_path= "C:/Users/asus/GitHub_clones/DIP23/src/resources/data_base"
 new_image_path = test_figure_path2 #to ask user
 
 # Initialize classes
@@ -47,4 +47,4 @@ image_comparer = cp.Compare(sift.Sift())
 types, database_image_paths = database.read_all_k_images()
 if image_comparer.compare(database, types, new_image_path, database_image_paths) == -1:     
     print("Error")
-    sys.exit()
+    sys.exit()'''
