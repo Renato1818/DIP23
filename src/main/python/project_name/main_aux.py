@@ -30,18 +30,30 @@ database_path="C:/Users/asus/GitHub_clones/DIP23/src/resources/data_base"
 new_image_path = test_figure_path2
 
 # Initialize classes
-database = db.Database(database_path)
-image_comparer = cp.Compare(sift.Sift())
+'''database = db.Database(database_path)
+image_comparer = cp.Compare(sift.Sift())'''
 
-database.change_k(20)
-database.change_test(6)
-image_comparer.compare_and_display_results(database)
+sift__=sift.Sift()
+
+
+# Load the new image
+img1 = cv2.imread(image1_path, cv2.IMREAD_GRAYSCALE)
+# Load the new image
+img2 = cv2.imread(image2_path, cv2.IMREAD_GRAYSCALE)
+print('type ',img1)
+score = sift__.compare_images(img1, img2)
+
+print(score, type(score))
+
+'''database.change_k(10)
+database.change_test(3)
+image_comparer.compare_and_display_results(database)'''
 ##################################################################
 
-'''database_path= "C:/Users/asus/GitHub_clones/DIP23/src/resources/data_base"
+database_path= "C:/Users/asus/GitHub_clones/DIP23/src/resources/data_base"
 new_image_path = test_figure_path2 #to ask user
 
-# Initialize classes
+'''# Initialize classes
 database = db.Database(database_path)
 image_comparer = cp.Compare(sift.Sift())
 
