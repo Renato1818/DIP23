@@ -33,8 +33,8 @@ new_image_path = test_figure_path2
 database = db.Database(database_path)
 image_comparer = cp.Compare(sift.Sift())
 
-database.change_k(20)
-database.change_test(6)
+database.change_k(10)
+database.change_test(3)
 image_comparer.compare_and_display_results(database)
 ##################################################################
 
