@@ -72,15 +72,18 @@ class Sift:
         des2 = np.float32(des2)
         
         # BFMatcher with default params
-        matches = self.bf.knnMatch(des1, des2, k=2)
-
+        '''matches = self.bf.knnMatch(des1, des2, k=2)
+        
         # Apply ratio test
         #good_matches = [m for m, n in matches if m.distance < 0.75 * n.distance]
         good_matches = [m for m, n in matches if hasattr(m, 'distance') and hasattr(n, 'distance') and m.distance < 0.75 * n.distance]
+        '''
+        #print (self.get_similarity_from_desc(des1, des2))
+        similarity_score = self.get_similarity_from_desc(des1, des2)
+        #print("I'm here")
 
-
-        # Compute a similarity score (for example, the number of good matches)
-        similarity_score = len(good_matches)
+        '''# Compute a similarity score (for example, the number of good matches)
+        similarity_score = len(good_matches)'''
         
         return similarity_score
     
@@ -113,3 +116,44 @@ class Sift:
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
+    def calculateMatches(self, des1,des2):
+        matches = self.bf.knnMatch(des1,des2,k=2)
+        topResults1 = []
+        for m,n in matches:
+            if m.distance < 0.7*n.distance:
+                topResults1.append([m])
+                
+        matches = self.bf.knnMatch(des2,des1,k=2)
+        topResults2 = []
+        for m,n in matches:
+            if m.distance < 0.7*n.distance:
+                topResults2.append([m])
+        
+        topResults = []
+        for match1 in topResults1:
+            match1QueryIndex = match1[0].queryIdx
+            match1TrainIndex = match1[0].trainIdx
+
+            for match2 in topResults2:
+                match2QueryIndex = match2[0].queryIdx
+                match2TrainIndex = match2[0].trainIdx
+
+                if (match1QueryIndex == match2TrainIndex) and (match1TrainIndex == match2QueryIndex):
+                    topResults.append(match1)
+        return topResults
+
+    def get_similarity_from_desc(self, img1, img2, approach = 'sift'):
+        if approach == 'sift':
+            # BFMatcher with euclidean distance
+            bf = cv2.BFMatcher()
+        else:
+            # BFMatcher with hamming distance
+            bf = cv2.BFMatcher(cv2.NORM_HAMMING)
+        
+        matches = bf.knnMatch(img1,img2,k=2)
+        # Apply ratio test
+        good = []
+        for m,n in matches:
+            if m.distance < 0.75*n.distance:
+                good.append([m])
+        return len(good) / len(matches)

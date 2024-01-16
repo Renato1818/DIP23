@@ -38,10 +38,11 @@ sift__=sift.Sift()
 
 # Load the new image
 img1 = cv2.imread(image1_path, cv2.IMREAD_GRAYSCALE)
+img1 = sift__.compare_images_extra(img1)
 # Load the new image
 img2 = cv2.imread(image2_path, cv2.IMREAD_GRAYSCALE)
-print('type ',img1)
-score = sift__.compare_images(img1, img2)
+#print('type ',img1)
+score = sift__.compare_images_opt(img1, img2)
 
 print(score, type(score))
 

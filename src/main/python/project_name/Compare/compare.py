@@ -108,12 +108,14 @@ class Compare:
         print(database_image_paths)'''
         
         # Load the new image
-        new_img = cv2.imread(new_image_path, cv2.IMREAD_GRAYSCALE)
+        new_img = cv2.imread(new_image_path)
+        new_img = cv2.cvtColor(new_img, cv2.COLOR_BGR2GRAY)
         new_img = self.sift_comparer.compare_images_extra(new_img)
 
         for database_image_path, folder_name in tqdm(database_image_paths, desc="Comparing images", unit="image"):
             # Load the database image
-            database_img = cv2.imread(database_image_path, cv2.IMREAD_GRAYSCALE)
+            database_img = cv2.imread(database_image_path)
+            database_img = cv2.cvtColor(database_img, cv2.COLOR_BGR2GRAY)
 
             # Perform the comparison using the SIFT comparer
             similarity_score = self.sift_comparer.compare_images_opt(new_img, database_img)
