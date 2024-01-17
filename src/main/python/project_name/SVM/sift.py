@@ -81,11 +81,11 @@ class Sift:
         des2 = np.float32(des2)
         
         # BFMatcher with default params
-        #bf = cv2.BFMatcher()
-        FLANN_INDEX_KDTREE = 1
+        bf = cv2.BFMatcher()
+        '''FLANN_INDEX_KDTREE = 1
         index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
         search_params = dict(checks=50)   # or pass empty dictionary
-        bf = cv2.FlannBasedMatcher(index_params,search_params)
+        bf = cv2.FlannBasedMatcher(index_params,search_params)'''
         matches = bf.knnMatch(des1, des2, k=2)
         
         # Apply ratio test

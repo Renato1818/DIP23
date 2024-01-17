@@ -128,7 +128,7 @@ class GUI(QMainWindow):
             self.computeRenato()
 
     def computeAlessandro(self):        
-        print("Not comput Alessandro anymore.")
+        print("Not computing.")
         '''self.status_label.show()
         time.sleep(1)
         prediction = self.model.predict(self.temp_path)
@@ -144,12 +144,11 @@ class GUI(QMainWindow):
         self.show_image("/heatmap.png")
 
     def computeJakub(self):
-        print("Compute Jakub is called.")
+        print("Not computing.")
 
     def computeRenato(self):
         print("Compute Renato is called.")
-        types, database_image_paths = self.database.read_all_k_images()
-        prediction = self.image_comparer.compare(self.database, types, self.temp_path, database_image_paths)
+        prediction = self.image_comparer.comparation(self.database, self.temp_path)
         self.update_results(prediction.folder_name, str(prediction.similarity_score))
         self.status_label.hide()
         

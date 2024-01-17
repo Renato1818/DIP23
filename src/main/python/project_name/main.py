@@ -35,7 +35,7 @@ image_comparer = cp.Compare(sift.Sift())
 
 database.change_k(10)
 database.change_test(3)
-image_comparer.compare_and_display_results(database)
+image_comparer.trainning(database)
 ##################################################################
 
 '''database_path= "C:/Users/asus/GitHub_clones/DIP23/src/resources/data_base"
