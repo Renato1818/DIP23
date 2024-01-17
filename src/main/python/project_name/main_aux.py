@@ -38,7 +38,7 @@ sift__=sift.Sift()
 
 # Load the new image
 img1 = image1_path
-img1 = sift__.compare_images_extra(img1)
+img1 = sift__.process_img_test(img1)
 # Load the new image
 img2 = image2_path
 #print('type ',img1)

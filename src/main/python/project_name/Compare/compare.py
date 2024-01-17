@@ -95,7 +95,7 @@ class Compare:
     #Receive the test image and the database, and do the comparation
     def _sift_compare_test(self, new_image_path, database_image_paths):
         results = []    
-        new_img = self.sift_comparer.compare_images_extra(new_image_path)
+        new_img = self.sift_comparer.process_img_test(new_image_path)
 
         for db_img_path, folder_name in tqdm(database_image_paths, desc="Comparing images", unit="image"):
             # Perform the comparison using the SIFT comparer

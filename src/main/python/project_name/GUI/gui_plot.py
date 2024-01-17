@@ -5,19 +5,25 @@ import cv2
 import pandas as pd
 import tkinter as tk
 from tkinter import ttk
+from tkinter.filedialog import askdirectory
 
 class GuiPlot:
     def __init__(self, figsize=(8, 5)):
         self.figsize=figsize
         return
     
+    def path_directory():
+        database_path = askdirectory()
+        if not database_path:
+            print("No directory selected. Exiting program.")
+            return -1
+        return database_path
+    
     def find_scope_plot_bar(self, types_with_scores):
         type_names = types_with_scores[:, 0]
         num_images = types_with_scores[:, 1]
         avg_similarity = types_with_scores[:, 2] / np.maximum(1, num_images)  # Avoid division by zero
-        
-        # Create a figure with a specified size
-    
+            
         fig, ax = plt.subplots(figsize=self.figsize)
         ind = np.arange(len(type_names))
 
