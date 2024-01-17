@@ -15,6 +15,7 @@ class GUI(QMainWindow):
 
     def initUI(self):
         
+        self.database_path="C:/Users/asus/GitHub_clones/DIP23/src/resources/data_base"
         self.setWindowTitle('Image Processing App')
         self.setGeometry(100, 100, 800, 600)
 
@@ -86,12 +87,9 @@ class GUI(QMainWindow):
         self.rect_size = 0
         self.rubber_band = QRubberBand(QRubberBand.Rectangle, self.image_label)
         self.selected_option = 'Renato'
-        #self.model = ModelEstimator()
         self.temp_path = os.path.dirname(os.path.abspath(__file__)) + "/temp.jpg"
         
-        #RENATO INICIALAZION
-        database_path="C:/Users/asus/GitHub_clones/DIP23/src/resources/data_base"
-        self.database = db.Database(database_path)
+        self.database = db.Database(self.database_path)
         self.image_comparer = cp.Compare(sift.Sift())
 
     def open_image(self):
