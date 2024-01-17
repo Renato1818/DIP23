@@ -1,11 +1,10 @@
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
-import SVM.sift as sift
 import DataBase.database as db
 import GUI.gui_plot as pt
 from Compare import compare as cp
-from SVM import sift
+from Compare import sift
 import sys
 
 # Example usage

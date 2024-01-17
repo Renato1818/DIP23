@@ -3,7 +3,7 @@ import numpy as np
 from tqdm import tqdm
 import numpy as np
 import cv2
-import SVM.sift as sift
+from Compare.sift import Sift
 import DataBase.database as db
 import Terminal.terminal as term
 import GUI.gui_plot as pt

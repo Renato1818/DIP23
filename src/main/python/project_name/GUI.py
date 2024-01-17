@@ -2,11 +2,10 @@ import sys, os, time
 from PyQt5.QtWidgets import QDialog, QLineEdit, QComboBox, QApplication, QMainWindow, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog, QWidget, QRubberBand
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt, QRect, QPoint, QSize
-#from ModelEstimator import ModelEstimator
 
 import DataBase.database as db
 from Compare import compare as cp
-import SVM.sift as sift
+from Compare import sift
 
 
 class GUI(QMainWindow):
@@ -36,7 +35,7 @@ class GUI(QMainWindow):
         self.compute_button.setFixedSize(150, 30)
 
         self.options_combo_box = QComboBox(self)
-        self.options_combo_box.addItems(['Alessandro', 'Jakub', 'Renato'])
+        self.options_combo_box.addItems(['Renato', 'Alessandro', 'Jakub' ])
         self.options_combo_box.currentIndexChanged.connect(self.update_compute_function)
         self.options_combo_box.setFixedSize(150, 30)
         
