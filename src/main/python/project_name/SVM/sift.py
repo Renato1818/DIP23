@@ -78,17 +78,19 @@ class Sift:
         
         return similarity_score
     
-    def compare_images_sift(image1, image2):
+    '''
+    def compare_images_surf(surf, image1, image2):
         # Load images
         img1 = cv2.imread(image1, cv2.IMREAD_GRAYSCALE)
         img2 = cv2.imread(image2, cv2.IMREAD_GRAYSCALE)
 
         # Initialize SIFT detector
-        sift = cv2.SIFT_create()
-
+        #sift = cv2.SIFT_create()
+        surf = cv2.xfeatures2d.SURF_create()
+        
         # Find the keypoints and descriptors with SIFT
-        kp1, des1 = sift.detectAndCompute(img1, None)
-        kp2, des2 = sift.detectAndCompute(img2, None)
+        kp1, des1 = surf.detectAndCompute(img1, None)
+        kp2, des2 = surf.detectAndCompute(img2, None)
 
         # BFMatcher with default params
         bf = cv2.BFMatcher()
@@ -101,12 +103,12 @@ class Sift:
                 good_matches.append(m)
 
         # Draw matches
-        '''img_matches = cv2.drawMatches(img1, kp1, img2, kp2, good_matches, None, flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+        img_matches = cv2.drawMatches(img1, kp1, img2, kp2, good_matches, None, flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
         cv2.imshow("SIFT Matches", img_matches)
         cv2.waitKey(0)
         cv2.destroyAllWindows()'''
 
-    def calculateMatches(self, des1,des2):
+    '''def calculateMatches(self, des1,des2):
         matches = self.bf.knnMatch(des1,des2,k=2)
         topResults1 = []
         for m,n in matches:
@@ -130,9 +132,9 @@ class Sift:
 
                 if (match1QueryIndex == match2TrainIndex) and (match1TrainIndex == match2QueryIndex):
                     topResults.append(match1)
-        return topResults
+        return topResults'''
 
-    def get_similarity_from_desc(self, img1, img2, approach = 'sift'):
+    '''def get_similarity_from_desc(self, img1, img2, approach = 'sift'):
         if approach == 'sift':
             # BFMatcher with euclidean distance
             bf = cv2.BFMatcher()
@@ -146,4 +148,4 @@ class Sift:
         for m,n in matches:
             if m.distance < 0.75*n.distance:
                 good.append([m])
-        return len(good) / len(matches)
+        return len(good) / len(matches)'''

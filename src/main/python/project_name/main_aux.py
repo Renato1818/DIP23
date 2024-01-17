@@ -2,7 +2,6 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 import SVM.sift as sift
-import SVM.sufr as surf
 import DataBase.database as db
 from Compare import compare as cp
 from SVM import sift
@@ -38,13 +37,14 @@ sift__=sift.Sift()
 
 # Load the new image
 img1 = image1_path
-img1 = sift__.process_img_test(img1)
+img1_ = sift__.process_img_test(img1)
 # Load the new image
 img2 = image2_path
 #print('type ',img1)
-score = sift__.compare_images_opt(img1, img2)
+score = sift__.compare_images_opt(img1_, img2)
 
 print(score, type(score))
+print('Score1')
 
 '''database.change_k(10)
 database.change_test(3)

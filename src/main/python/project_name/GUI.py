@@ -31,14 +31,6 @@ class GUI(QMainWindow):
         self.open_image_button.clicked.connect(self.open_image)
         self.open_image_button.setFixedSize(150, 30)
 
-        # self.crop_button = QPushButton('Crop', self)
-        # self.crop_button.clicked.connect(self.crop)
-        # self.crop_button.setFixedSize(150, 30)
-        
-        # self.test = QPushButton('test', self)
-        # self.test.clicked.connect(self.show_image)
-        # self.test.setFixedSize(150, 30)
-
         self.compute_button = QPushButton('Compute', self)
         self.compute_button.clicked.connect(self.compute)
         self.compute_button.setFixedSize(150, 30)
@@ -71,8 +63,6 @@ class GUI(QMainWindow):
         self.confidence_label.setBuddy(self.confidence_textbox)
 
         self.buttons_layout.addWidget(self.open_image_button)
-        # self.buttons_layout.addWidget(self.crop_button)
-        # self.buttons_layout.addWidget(self.test)
         self.buttons_layout.addWidget(self.options_combo_box)
         self.buttons_layout.addWidget(self.compute_button)
         self.buttons_layout.addWidget(self.lime_button)
@@ -96,7 +86,7 @@ class GUI(QMainWindow):
         self.selection_end = QPoint()
         self.rect_size = 0
         self.rubber_band = QRubberBand(QRubberBand.Rectangle, self.image_label)
-        self.selected_option = 'Alessandro'
+        self.selected_option = 'Renato'
         #self.model = ModelEstimator()
         self.temp_path = os.path.dirname(os.path.abspath(__file__)) + "/temp.jpg"
         
@@ -129,11 +119,6 @@ class GUI(QMainWindow):
 
     def computeAlessandro(self):        
         print("Not computing.")
-        '''self.status_label.show()
-        time.sleep(1)
-        prediction = self.model.predict(self.temp_path)
-        self.update_results(prediction[0], prediction[1])
-        self.status_label.hide()'''
         return
         
     def computeLIME(self):
@@ -179,22 +164,6 @@ class GUI(QMainWindow):
             self.rect_size = min(abs(self.selection_end.x()-self.selection_start.x()), 
                                    abs(self.selection_end.y()-self.selection_start.y()))
             self.rubber_band.setGeometry(QRect(self.selection_start, QSize(self.rect_size, self.rect_size)))
-
-    # def crop(self):
-        # if self.image_path and self.rubber_band.isVisible():
-            # Get the selected region from the original image
-            # selected_rect = QRect(self.selection_start, QSize(self.rect_size, self.rect_size))
-
-            # # Crop the image to the selected region
-            # pixmap = QPixmap(self.image_path)
-            # cropped_pixmap = pixmap.copy(selected_rect)
-
-            # # Display the cropped image
-            # self.image_label.setPixmap(cropped_pixmap)
-            # self.image_label.adjustSize()
-            
-            # # Save the cropped image to the same folder with the name "temp.jpg"
-            # cropped_pixmap.save(self.temp_path, 'JPG')
 
     def update_compute_function(self, index):
         options = ['Alessandro', 'Jakub', 'Renato']
