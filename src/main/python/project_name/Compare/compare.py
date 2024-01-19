@@ -11,6 +11,7 @@ import os
 import pandas as pd
 import tkinter as tk
 from tkinter import ttk
+from scipy.stats import mode
 
 
 class ResultStructure:
@@ -55,6 +56,7 @@ class Compare:
         for image_test in test_image_paths:
             # Compare the current image with images from the database
             results = self.compare(types, image_test, database_image_paths)
+            
             if results != -1:
                 all_results.append(results)
 
@@ -130,8 +132,16 @@ class Compare:
         if self.display:
             self.plot.find_scope_plot_bar(types_with_scores)
 
+        # Calculate the median for each flower type
+        median_scores = [np.median(scores) for scores in types_with_scores[:, 1]]
+        order = np.argsort(median_scores)[::-1]
+        
+        # Calculate the mode for each flower type
+        #mode_scores, _ = mode(types_with_scores[:, 1], axis=1, nan_policy='omit')
+        #order = np.argsort(mode_scores)[::-1]
+        
         # Order types_with_scores by average similarity score in descending order
-        order = np.argsort(types_with_scores[:, 2] / np.maximum(1, types_with_scores[:, 1]))[::-1]
+        #order = np.argsort(types_with_scores[:, 2] / np.maximum(1, types_with_scores[:, 1]))[::-1]
         types_with_scores = types_with_scores[order]
 
         return types_with_scores
