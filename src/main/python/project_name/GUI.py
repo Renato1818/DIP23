@@ -36,7 +36,7 @@ class GUI(QMainWindow):
         self.compute_button.setFixedSize(150, 30)
 
         self.options_combo_box = QComboBox(self)
-        self.options_combo_box.addItems(['Renato', 'Alessandro', 'Jakub' ])
+        self.options_combo_box.addItems(['SIFT', 'Alessandro', 'Jakub' ])
         self.options_combo_box.currentIndexChanged.connect(self.update_compute_function)
         self.options_combo_box.setFixedSize(150, 30)
         
@@ -86,7 +86,7 @@ class GUI(QMainWindow):
         self.selection_end = QPoint()
         self.rect_size = 0
         self.rubber_band = QRubberBand(QRubberBand.Rectangle, self.image_label)
-        self.selected_option = 'Renato'
+        self.selected_option = 'SIFT'
         self.temp_path = os.path.dirname(os.path.abspath(__file__)) + "/temp.jpg"
         
         self.database = db.Database(self.database_path)
@@ -111,7 +111,7 @@ class GUI(QMainWindow):
             self.computeAlessandro()
         elif self.selected_option == 'Jakub':
             self.computeJakub()
-        elif self.selected_option == 'Renato':
+        elif self.selected_option == 'SIFT':
             self.computeRenato()
 
     def computeAlessandro(self):        
