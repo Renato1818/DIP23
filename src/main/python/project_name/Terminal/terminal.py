@@ -33,3 +33,6 @@ class Terminal:
         accuracy = correct_predictions / total_predictions
 
         print(f"Accuracy: {accuracy}")
+    
+    def expected_label(self, label):
+        print(f"Expected Result: {label}")

@@ -19,7 +19,7 @@ if database_path == -1:
     sys.exit()
 
 #### ASK IMAGE TEST ####
-new_image_path = test_figure_path2
+#new_image_path = test_figure_path2
 
 # Initialize classes
 database = db.Database(database_path)
@@ -27,6 +27,6 @@ image_comparer = cp.Compare(sift.Sift())
 
 # Run the code
 database.change_k(10)
-database.change_test(3)
+database.change_test(1)
 image_comparer.trainning(database)
 

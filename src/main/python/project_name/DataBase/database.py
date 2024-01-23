@@ -78,11 +78,11 @@ class Database:
         test_image_paths = []
         test_labels = []
         training_image_paths = []
-        #training_labels = []
 
         if not os.path.exists(self.database_path):
             print(f"Database path '{self.database_path}' does not exist.")
-            return labels, test_image_paths, test_labels, training_image_paths
+            return labels, test_image_paths, test_labels, training_image_paths   
+            #return labels, test_image_paths, training_image_paths
 
         for folder_path, _, _ in os.walk(self.database_path):
             folder_name = os.path.basename(folder_path)
@@ -94,7 +94,7 @@ class Database:
                 aux=0
                 for file_path, folder_name in aux_image_paths:
                     if aux < self.test:
-                        test_image_paths.append(file_path)
+                        test_image_paths.append((file_path, aux_labels))
                         test_labels.extend(aux_labels)
                     else:
                         training_image_paths.append((file_path, folder_name))
@@ -115,3 +115,4 @@ class Database:
             #print('Trainning_images_paths')
             #print(training_image_paths)
         return labels, test_image_paths, test_labels, training_image_paths
+        #return labels, test_image_paths, training_image_paths

@@ -23,7 +23,7 @@ class ResultStructure:
 
 
 class Compare:
-    def __init__(self, sift_comparer, terminal=True, display=False):
+    def __init__(self, sift_comparer, terminal=False, display=False):
         self.sift_comparer = sift_comparer
         self.terminal = terminal
         self.display = display
@@ -53,7 +53,9 @@ class Compare:
     def input_vector_compare(self, types, test_image_paths, database_image_paths):
         
         all_results = []               
-        for image_test in test_image_paths:
+        for image_test, test_label in test_image_paths:
+            if self.terminal:
+                self.term.expected_label(test_label)
             # Compare the current image with images from the database
             results = self.compare(types, image_test, database_image_paths)
             
