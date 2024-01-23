@@ -2,9 +2,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import cv2
-import pandas as pd
+'''import pandas as pd
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk'''
 from tkinter.filedialog import askdirectory
 
 class GuiPlot:

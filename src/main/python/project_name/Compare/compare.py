@@ -3,15 +3,16 @@ import numpy as np
 from tqdm import tqdm
 import numpy as np
 import cv2
-from Compare.sift import Sift
 import DataBase.database as db
 import Terminal.terminal as term
 import GUI.gui_plot as pt
 import os
+'''
+from Compare.sift import Sift
 import pandas as pd
 import tkinter as tk
 from tkinter import ttk
-from scipy.stats import mode
+from scipy.stats import mode'''
 
 
 class ResultStructure:
@@ -23,7 +24,7 @@ class ResultStructure:
 
 
 class Compare:
-    def __init__(self, sift_comparer, terminal=False, display=False):
+    def __init__(self, sift_comparer, terminal=True, display=False):
         self.sift_comparer = sift_comparer
         self.terminal = terminal
         self.display = display
@@ -133,14 +134,6 @@ class Compare:
         # Print a bar plot
         if self.display:
             self.plot.find_scope_plot_bar(types_with_scores)
-
-        # Calculate the median for each flower type
-        #median_scores = [np.median(scores) for scores in types_with_scores[:, 1]]
-        #order = np.argsort(median_scores)[::-1]
-        
-        # Calculate the mode for each flower type
-        #mode_scores, _ = mode(types_with_scores[:, 1], axis=1, nan_policy='omit')
-        #order = np.argsort(mode_scores)[::-1]
         
         # Order types_with_scores by average similarity score in descending order
         order = np.argsort(types_with_scores[:, 2] / np.maximum(1, types_with_scores[:, 1]))[::-1]

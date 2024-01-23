@@ -14,7 +14,7 @@ class GUI(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        
+        #Change the path if doesn't work:
         self.database_path="C:/Users/asus/GitHub_clones/DIP23/src/resources/data_base"
         self.setWindowTitle('Image Processing App')
         self.setGeometry(100, 100, 800, 600)

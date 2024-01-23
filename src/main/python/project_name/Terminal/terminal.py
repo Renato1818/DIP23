@@ -1,5 +1,5 @@
-import numpy as np
-import cv2
+'''import numpy as np
+import cv2'''
 import pandas as pd
 
 class Terminal:
@@ -18,7 +18,6 @@ class Terminal:
             "Expected Label": expected_results,
             "Predicted Label": [result.folder_name for result in all_results],
             "Similarity Score": [result.similarity_score for result in all_results],
-            #"Error Percentage": [100 * (1 if label != result.folder_name else 0) for result, (image_path, label) in zip(all_results, expected_results)],
         }
 
         df = pd.DataFrame(data)
