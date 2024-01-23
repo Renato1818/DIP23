@@ -7,12 +7,6 @@ import DataBase.database as db
 import Terminal.terminal as term
 import GUI.gui_plot as pt
 import os
-'''
-from Compare.sift import Sift
-import pandas as pd
-import tkinter as tk
-from tkinter import ttk
-from scipy.stats import mode'''
 
 
 class ResultStructure:

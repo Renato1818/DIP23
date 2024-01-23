@@ -1,7 +1,3 @@
-'''import numpy as np
-import cv2
-import matplotlib.pyplot as plt
-import GUI.gui_plot as pt'''
 import DataBase.database as db
 from Compare import compare as cp
 from Compare import sift
