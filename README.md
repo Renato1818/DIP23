@@ -1,3 +1,5 @@
 # DIP23
 
-Is here were we can star your project of Digital image processing
+This code was created for the Design Image Processing course in 2023/24.
+
+For more information, check out the PDF. 
